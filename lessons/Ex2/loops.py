@@ -1,0 +1,6 @@
+student_names = ["James", "Katarina", "Jessica", "Mark", "Bort", "Frank Grimes", "Max Power"]
+for name in student_names:
+    if name == "Bort":
+        print("Found him! " + name)
+        continue
+    print("Currently testing " + name)
