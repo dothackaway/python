@@ -4,4 +4,5 @@ pw = """Vm0wd2QyUXlVWGxWV0d4WFlURndVRlpzWkZOalJsWjBUVlpPV0ZKc2JETlhhMk0xVmpKS1Iy
 
 for i in range(0, 13):
     pw = base64.b64decode(pw)
-    print(pw)
+
+print(pw)
