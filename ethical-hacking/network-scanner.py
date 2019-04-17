@@ -10,10 +10,26 @@
 
 import scapy.all as scapy
 
+#
+# scan() function to create a broadcast packet
+#
 def scan(ip):
-    # Create ARP packet using scapy
+    # arp_request = scapy.arping(ip)
+
+    # Create ARP packet instance using scapy
     arp_request = scapy.ARP(pdst=ip)
-    print(arp_request.summary())
+    broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
+    arp_request_broadcast = broadcast/arp_request
+    # send request packet, srp(), function
+    # srp() returns 2 lists: answered and unanswered packets
+    ans_list = scapy.srp(arp_request_broadcast, timeout=1, verbose=False)[0]
+
+    print("________________________________________________")
+    print("\tIP\t\tMAC Address\n------------------------------------------------")
+
+    for element in ans_list:
+        print(element[1].psrc + "\t\t" + element[1].hwsrc)
 
 
-scan("192.168.43.230")
+
+scan("192.168.43.1/24")
