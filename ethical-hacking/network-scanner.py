@@ -27,8 +27,12 @@ def scan(ip):
     print("________________________________________________")
     print("\tIP\t\tMAC Address\n------------------------------------------------")
 
+    clients_list = []
     for element in ans_list:
+        client_dict = {"ip":element[1].psrc, "mac":element[1].hwsrc}
+        clients_list.append(client_dict)
         print(element[1].psrc + "\t\t" + element[1].hwsrc)
+    print(clients_list)
 
 
 
