@@ -8,8 +8,14 @@
 # 4. Print result
 #
 
-import scapy.all as scapy
+import scapy.all as scapy, optparse
 
+
+def get_arguments():
+    parser = optparse.OptionParser()
+    parser.add_option("-t", "--target", dest="target", help="Target IP / IP range.")
+    (options, arguments) = parser.parse_args()
+    return options
 #
 # scan() function to create a broadcast packet
 #
@@ -23,17 +29,22 @@ def scan(ip):
     # send request packet, srp(), function
     # srp() returns 2 lists: answered and unanswered packets
     ans_list = scapy.srp(arp_request_broadcast, timeout=1, verbose=False)[0]
-
-    print("________________________________________________")
-    print("\tIP\t\tMAC Address\n------------------------------------------------")
-
+    # Create list of clients and dictionary of client elements
     clients_list = []
     for element in ans_list:
         client_dict = {"ip":element[1].psrc, "mac":element[1].hwsrc}
         clients_list.append(client_dict)
-        print(element[1].psrc + "\t\t" + element[1].hwsrc)
-    print(clients_list)
 
+    return clients_list
 
+def print_results(results_list):
+    print("Scan results for clients on the network...")
+    print("________________________________________________")
+    print("\tIP\t\tMAC Address\n------------------------------------------------")
+    for client in results_list:
+        print(client["ip"] + "\t\t" + client["mac"])
 
-scan("192.168.43.1/24")
+# Run
+options = get_arguments()
+scan_result = scan(options.target)
+print_results(scan_result)
