@@ -8,13 +8,21 @@
 # 4. Print result
 #
 
-import scapy.all as scapy, optparse
+import scapy.all as scapy, argparse, re
 
 
 def get_arguments():
-    parser = optparse.OptionParser()
-    parser.add_option("-t", "--target", dest="target", help="Target IP / IP range.")
-    (options, arguments) = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-t", "--target", dest="target", help="Target IP / IP range. Example: 192.168.1.1 or 192.168.1.1/24")
+    options = parser.parse_args()
+    regex = re.compile(r"(\w{1,3}\.){3}\w{1,3}")
+    # error conditions
+    if not options.target:
+        # Missing required interface
+        parser.error("[-] Please specify a target IP or IP range, use --help for more info.")
+    elif not regex.search(options.target):
+        # Target entered not accepted
+        parser.error("[-] Target entered " + options.target + " not accepted.  Use --help for more info.")
     return options
 #
 # scan() function to create a broadcast packet
@@ -38,9 +46,7 @@ def scan(ip):
     return clients_list
 
 def print_results(results_list):
-    print("Scan results for clients on the network...")
-    print("________________________________________________")
-    print("\tIP\t\tMAC Address\n------------------------------------------------")
+    print("IP\t\t\tMAC Address\n------------------------------------------------")
     for client in results_list:
         print(client["ip"] + "\t\t" + client["mac"])
 
